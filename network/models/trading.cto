@@ -1,7 +1,7 @@
 /**
  * Metal Commodity Trading Network
  */
-namespace org.acme.trading
+namespace ampretia.mtn
 
 /**
  * Definition of a Commodity, that has a symbol/description along with the exchange where this 
@@ -26,15 +26,15 @@ asset CommodityListing identified by listingId {
   o Integer   quantity
   o Double           offerPrice
   --> Brokage        offeringHouse
-  --> BarteringSpec  barteringSpec
+  // --> BarteringSpec  barteringSpec optional
 }
-
-asset BarteringSpec identified by id {
-  o String id
-  o Integer upperRangePercent
-  o Integer lowerRangePercent
-  --> Trader  trader
-}
+// asset BarteringSpec identified by id {
+//   o String id
+//   o Integer upperRangePercent
+//   o Integer lowerRangePercent
+//   --> Trader  trader
+// }
+// 
 
 /**
  * An exhange will have an identity and description. 
@@ -84,6 +84,7 @@ transaction Trade {
     o TradeLine   line
     --> Trader    trader
     --> Exchange  exchange
+    o String      mytradeid
 }
 
 transaction SubmitListing {
@@ -91,7 +92,8 @@ transaction SubmitListing {
   o Integer   quantity
   o Double           offerPrice
   --> Exchange  exchange
-  o BarteringSpec  bartingSpec
+  // o BarteringSpec  bartingSpec optional
+  o String        newid
 }
 
 event TradeNotification {
@@ -109,10 +111,10 @@ participant InHouseNetworkAdmin extends Person {
 }
 
 /**
- * role purely for inhouse to be able to create identities
+ * Role for the App Devs to use
  */
-participant RestServer identified by id {
-  o String id  
+participant AppDev identified by id extends Person {
+  o String id
 }
 
 
@@ -120,4 +122,8 @@ participant RestServer identified by id {
 // Setup the demonstration assets
 transaction _demoSetup {
   
+}
+
+asset output identified by text {
+  o String text
 }

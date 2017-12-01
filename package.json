@@ -6,14 +6,16 @@
     "version": "0.1.7",
     "scripts": {
         "postinstall": "./scripts/getTools.sh",
-        "buildbna": "mkdirp ./dist && composer archive create  --sourceType dir --sourceName . -a ./dist/amptn.bna",
+        "buildbna": "mkdirp ./dist && composer archive create  --sourceType dir --sourceName ./network/ -a ./dist/amptn.bna",
         "pretest": "npm run lint",
         "lint": "eslint .",
         "postlint": "npm run licchk",
         "licchk": "license-check",
         "postlicchk": "npm run doc",
         "test": "mocha -t 0 --recursive",
-        "deploy": "./scripts/deploy.sh"
+        "restartFabric": "./scripts/fabric-tools/startFabric.sh",
+        "freshdeploy": "npm run buildbna && composer runtime install --card PeerAdmin@local -n metal-trade-network && composer network start --card PeerAdmin@local -a ./dist/amptn.bna -A admin -S adminpw -f ./_cards/admin@local.card",
+        "update": "npm run buildbna &&  composer network update --card admin@mtn-local -a ./dist/amptn.bna"
     },
     "repository": {
         "type": "git",

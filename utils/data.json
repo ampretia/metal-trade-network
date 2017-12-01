@@ -1,0 +1,151 @@
+{
+    "namespace": "ampretia.mtn",
+    "registries": ["Exchange","Regulator","Brokage","Trader"],
+    "Exchange": [
+        {
+            "$class": "ampretia.mtn.Exchange",
+            "exchangeId": "2751",
+            "description": "Winchester Metals",
+            "commissionRate": 20,
+            "exchangeRegulator": "resource:ampretia.mtn.Regulator#2943",
+            "listedCommodities": []
+        },
+        {
+            "$class": "ampretia.mtn.Exchange",
+            "exchangeId": "5412",
+            "description": "Waltham Metals",
+            "commissionRate": 5,
+            "exchangeRegulator": "resource:ampretia.mtn.Regulator#5924",
+            "listedCommodities": []
+        },
+        {
+            "$class": "ampretia.mtn.Exchange",
+            "exchangeId": "9396",
+            "description": "Hursley Metals",
+            "commissionRate": 10,
+            "exchangeRegulator": "resource:ampretia.mtn.Regulator#4006",
+            "listedCommodities": []
+        }
+    ],
+    "Regulator": [
+        {
+            "$class": "ampretia.mtn.Regulator",
+            "regId": "2954",
+            "email": "regulator@winchestermetals.com",
+            "firstName": "Zach",
+            "lastName": "Zachary"
+        },
+        {
+            "$class": "ampretia.mtn.Regulator",
+            "regId": "4066",
+            "email": "regulator@walthammetals.com",
+            "firstName": "Bell",
+            "lastName": "Heaney"
+        },
+        {
+            "$class": "ampretia.mtn.Regulator",
+            "regId": "5924",
+            "email": "regulator@hursleymetals.com",
+            "firstName": "Liliane",
+            "lastName": "Anderson"
+        }
+    ],
+    "Brokage": [
+        {
+            "$class": "ampretia.mtn.Brokage",
+            "brokerId": "8135",
+            "name": "Wyman, Quitzon and Howell",
+            "employedTraders": [],
+            "inhouseRegulator": {
+                "$class": "ampretia.mtn.Regulator",
+                "regId": "0468",
+                "email": "reg@qnh.com",
+                "firstName": "Emmanuel",
+                "lastName": "Dickinson"
+            },
+            "portfolio": []
+        },
+        {
+            "$class": "ampretia.mtn.Brokage",
+            "brokerId": "9156",
+            "name": "Nikolaus and Sons",
+            "employedTraders": [],
+            "inhouseRegulator": {
+                "$class": "ampretia.mtn.Regulator",
+                "regId": "0104",
+                "email": "regulator@nas.com",
+                "firstName": "Paris",
+                "lastName": "Langosh"
+            },
+            "portfolio": []
+        }
+    ],
+    "Trader": [
+        {
+            "$class": "ampretia.mtn.Trader",
+            "tradeId": "6515",
+            "fundLimit": 10000,
+            "employer": "resource:ampretia.mtn.Brokage#8135",
+            "email": "susie@qnh.com",
+            "firstName": "Susie",
+            "lastName": "Rippin"
+        },
+        {
+            "$class": "ampretia.mtn.Trader",
+            "tradeId": "6517",
+            "fundLimit": 10000,
+            "employer": "resource:ampretia.mtn.Brokage#8135",
+            "email": "ralph@qnh.com",
+            "firstName": "Ralph",
+            "lastName": "Daniel"
+        },
+        {
+            "$class": "ampretia.mtn.Trader",
+            "tradeId": "6516",
+            "fundLimit": 10000,
+            "employer": "resource:ampretia.mtn.Brokage#8135",
+            "email": "waylon@qnh.com",
+            "firstName": "Waylon",
+            "lastName": "Schultz"
+        }
+    ],
+    "transactions" :
+        [{
+            "$class": "ampretia.mtn.SubmitListing",
+            "commodity": {
+              "$class": "ampretia.mtn.Commodity",
+              "tradingSymbol": "Ag",
+              "description": "Gold"
+            },
+            "quantity": 1220,
+            "offerPrice": 54,
+            "exchange": "resource:ampretia.mtn.Exchange#2751",
+            "newid": "ag01"
+          },
+          {
+            "$class": "ampretia.mtn.SubmitListing",
+            "commodity": {
+              "$class": "ampretia.mtn.Commodity",
+              "tradingSymbol": "Fe",
+              "description": "Lead"
+            },
+            "quantity": 100000,
+            "offerPrice": 20,
+            "exchange": "resource:ampretia.mtn.Exchange#2751",
+            "newid": "fe01"
+          },
+          {
+            "$class": "ampretia.mtn.Trade",
+            "line": {
+              "$class": "ampretia.mtn.TradeLine",
+              "tradingSymbol": "Ag",
+              "quantity": 100
+            },
+            "trader": "resource:ampretia.mtn.Trader#6515",
+            "exchange": "resource:ampretia.mtn.Exchange#2751"
+          }
+        
+        ]
+
+    
+}

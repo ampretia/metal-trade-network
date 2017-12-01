@@ -12,9 +12,49 @@
  * limitations under the License.
  */
 
+
+/** Creates a new listing on a exchange
+ * @param {ampretia.mtn.SubmitListing} listingtx - the trade to be processed
+ * @transaction
+ * validate broker has the listing.
+ */
+function submitListing(listingtx){
+
+    var exchangeToListOn = listingtx.exchange;
+    var trader = getCurrentParticipant();
+
+    var newListing = getFactory().newResource('ampretia.mtn','CommodityListing',listingtx.newid);
+
+    newListing.commodity = listingtx.commodity;
+    newListing.quantity = listingtx.quantity;
+    newListing.offerPrice = listingtx.offerPrice;
+    newListing.offeringHouse = trader.employer;
+
+    exchangeToListOn.listedCommodities.push(newListing);
+
+    var exchangeRegistry;
+    var listingRegsitry;
+
+    return getAssetRegistry('ampretia.mtn.CommodityListing')
+      .then(function (result){
+          listingRegsitry = result;
+          return getAssetRegistry('ampretia.mtn.Exchange');
+      })
+      .then(function(result){
+          exchangeRegistry = result;
+      })
+      .then(function(){
+          return listingRegsitry.add(newListing);
+      })
+      .then(function(){
+          return exchangeRegistry.update(exchangeToListOn);
+      });
+
+}
+
 /**
  * Track the trade of a commodity from one trader to another
- * @param {org.acme.trading.Trade} trade - the trade to be processed
+ * @param {ampretia.mtn.Trade} trade - the trade to be processed
  * @transaction
  */
 function tradeCommodity(trade) {
@@ -22,7 +62,7 @@ function tradeCommodity(trade) {
     // get details of the trade
     var symbol = trade.line.tradingSymbol;
     var cost = trade.line.quantity;
-    
+
     var exchange = trade.exchange;
     // get details of the trader
     var trader = trade.trader;
@@ -33,30 +73,31 @@ function tradeCommodity(trade) {
     var brokage = trade.trader.employer;
 
     var regisitries = {};
-    
-    return getAssetRegistry('org.acme.trading.CommodityHolding')
+
+    return getAssetRegistry('ampretia.mtn.CommodityHolding')
     .then(function (result){
-        regisitries['org.acme.trading.CommodityHolding']=result;
-        return getAssetRegistry('org.acme.trading.CommodityListing')
+        regisitries['ampretia.mtn.CommodityHolding']=result;
+        return getAssetRegistry('ampretia.mtn.CommodityListing');
     })
     .then(function (result){
-        regisitries['org.acme.trading.CommodityListing']=result;
-        return getAssetRegistry('org.acme.trading.Exchange')
+        regisitries['ampretia.mtn.CommodityListing']=result;
+        return getAssetRegistry('ampretia.mtn.Exchange');
     })
     .then(function (result){
-        regisitries['org.acme.trading.Exchange']=result;
-        return getAssetRegistry('org.acme.trading.Brokage')
+        regisitries['ampretia.mtn.Exchange']=result;
+        return getAssetRegistry('ampretia.mtn.Brokage');
     })
     .then(function (result){
-        regisitries['org.acme.trading.Brokage']=result;
-        return;
+        regisitries['ampretia.mtn.Brokage']=result;
+        return getParticipantRegistry('ampretia.mtn.Trader');
     })
     .then(function (result){
+        regisitries['ampretia.mtn.Trader']=result;
         // need to see if the exchange has the commodity listed,
         var possibleListings = exchange.listedCommodities.filter(function(e) {
             // look for listings that match the requested symbol
-            return (e.commodity.tradingSymbol === symbol)
-               && (e.quantity >= trade.line.quantity);        
+            return (e.commodity.tradingSymbol === symbol) &&
+               (e.quantity >= trade.line.quantity);
         });
 
         if (!possibleListings){
@@ -68,13 +109,13 @@ function tradeCommodity(trade) {
         // TODO
 
         listing = possibleListings[0];
-        newHolding = getFactory().newResource('org.amce.trading','CommodityHolding',xxxx);
-        
+        newHolding = getFactory().newResource('ampretia.mtn','CommodityHolding',trade.mytradeid);
+
         newHolding.commodity = listing.commodity;
         newHolding.quantity = trade.line.quantity;
         newHolding.purchasePrice = listing.offerPrice;
         newHolding.tradedBy = trader;
-    
+
         listing.quantity -= trade.line.quantity;
 
         if ((listing.offerPrice * trade.line.quantity) > trader.fundLimit){
@@ -83,74 +124,30 @@ function tradeCommodity(trade) {
         }
         trader.fundLimit -= (listing.offerPrice * trade.line.quantity);
         // TODO if zero need to remove listing.
-    
+
         brokage.portfolio.push(newHolding);
     }).then(function(){
         // put the assets back
-        return regisitries['org.acme.trading.CommodityHolding'].add(newHoldling);
+        return regisitries['ampretia.mtn.CommodityHolding'].add(newHolding);
     })
     .then(function(){
         // put the assets back
-        return regisitries['org.acme.trading.CommodityListing'].update(listing);
+        return regisitries['ampretia.mtn.CommodityListing'].update(listing);
     }).then(function(){
-        return regisitries['org.acme.trading.Brokage'].update(brokage);
+        return regisitries['ampretia.mtn.Brokage'].update(brokage);
     }).then(function(){
-        return regisitries['org.acme.trading.Exchange'].update(exchange);
-    })
-
- 
-}
-
-
-
-
-
-/**
- * Remove all high volume commodities
- * @param {org.acme.trading._demoSetup} remove - the remove to be processed
- * @transaction
- */
-function setup(){
-    var factory = getFactory();
- 	var NS = 'org.acme.trading';
-    var traders = [
-      factory.newResource(NS,'Trader','CAROLINE'),
-      factory.newResource(NS,'Trader','TRACY'),
-      factory.newResource(NS,'Trader','TOM'),
-      factory.newResource(NS,'Trader','WHOLESALER')
-    ];
-    
-                          
-    var commodities = [
-      factory.newResource(NS,'Commodity','Ag'),
-      factory.newResource(NS,'Commodity','Pb'),
-      factory.newResource(NS,'Commodity','Fe'),
-      factory.newResource(NS,'Commodity','Cu')
-      ];
- 
-    /* add the resource and the traders */
-    return getParticipantRegistry(NS+'.Trader')
-  .then(function(traderRegistry){
-            traders.forEach(function(trader) {
-         
-          trader.firstName = trader.getIdentifier().toLowerCase();
-          trader.lastName = 'Trader';
-      });
-      return traderRegistry.addAll(traders);
-    })
-  .then(function(){
-    	return getAssetRegistry(NS+'.Commodity');
-    })
-  .then(function(assetRegistry){
-      var qty=5;
-      commodities.forEach(function(commodity) {
-        commodity.description='A lot of '+commodity.getIdentifier();
-        commodity.mainExchange='Hursley';
-        commodity.quantity = (qty);
-        commodity.owner = factory.newRelationship(NS,'Trader','WHOLESALER');
-        qty+=10;
-      })
-      return assetRegistry.addAll(commodities);
+        return regisitries['ampretia.mtn.Exchange'].update(exchange);
+    }).then(function(){
+        return regisitries['ampretia.mtn.Trader'].update(trader);
+    }).then(function(){
+       // var url = "https://hooks.slack.com/services/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";
+       // return post(url, listing);
     });
-  
+
 }
+
+
+
+
+
+

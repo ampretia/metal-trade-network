@@ -1,0 +1,123 @@
+/**
+ * Metal Commodity Trading Network
+ */
+namespace org.acme.trading
+
+/**
+ * Definition of a Commodity, that has a symbol/description along with the exchange where this 
+ * primarily traded.
+ */
+concept Commodity  {
+    o String tradingSymbol
+    o String description
+}
+
+asset CommodityHolding identified by holdingId {
+  o String    holdingId
+  o Commodity commodity
+  o Integer   quantity
+  o Double    purchasePrice
+  --> Trader  tradedBy
+}
+
+asset CommodityListing identified by listingId {
+  o String    listingId
+  o Commodity commodity
+  o Integer   quantity
+  o Double           offerPrice
+  --> Brokage        offeringHouse
+  --> BarteringSpec  barteringSpec
+}
+
+asset BarteringSpec identified by id {
+  o String id
+  o Integer upperRangePercent
+  o Integer lowerRangePercent
+  --> Trader  trader
+}
+
+/**
+ * An exhange will have an identity and description. 
+ * The commisionRate is how much commisions is charged per sale
+ * The regulator is the inhouse Regulator for this exchange
+ * The listCommodities are the ones currently listed on this exchange
+ */
+asset Exchange identified by exchangeId {
+  o String exchangeId
+  o String description
+  o Double commissionRate
+  --> Regulator exchangeRegulator
+  --> CommodityListing[] listedCommodities
+}
+
+abstract participant Person identified by email {
+  o String email
+  o String firstName
+  o String lastName
+}
+
+participant Trader  identified by tradeId extends Person{
+    o String tradeId
+    o Double  fundLimit
+    --> Brokage employer
+}
+
+participant Regulator identified by regId extends Person{
+  	o String regId
+}
+
+asset Brokage identified by brokerId  {
+  o String brokerId
+  o String name
+  --> Trader[] employedTraders
+  o Regulator inhouseRegulator
+  --> CommodityHolding[] portfolio
+}
+
+/**  */
+concept TradeLine {
+  o String tradingSymbol
+  o Double quantity
+}
+
+transaction Trade {
+    o TradeLine   line
+    --> Trader    trader
+    --> Exchange  exchange
+}
+
+transaction SubmitListing {
+  o Commodity commodity
+  o Integer   quantity
+  o Double           offerPrice
+  --> Exchange  exchange
+  o BarteringSpec  bartingSpec
+}
+
+event TradeNotification {
+   o String  commoditySymbolTraded
+   o Integer qtyTraded
+   o Double  unitPricePaid
+}
+
+
+/**
+ * role purely for inhouse to be able to create identities
+ */
+participant InHouseNetworkAdmin extends Person {
+  
+}
+
+/**
+ * role purely for inhouse to be able to create identities
+ */
+participant RestServer identified by id {
+  o String id  
+}
+
+
+//
+// Setup the demonstration assets
+transaction _demoSetup {
+  
+}

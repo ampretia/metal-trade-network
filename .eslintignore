@@ -3,3 +3,4 @@ node_modules
 out
 lib/introspect/parser.js
 network/lib/logic.js
+dist

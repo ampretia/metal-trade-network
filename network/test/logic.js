@@ -1,3 +1,17 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 'use strict';
 /**
  * Write the unit tests for your transction processor functions here
@@ -86,40 +100,18 @@ describe('#' + namespace, () => {
     describe('ChangeAssetValue()', () => {
         it('should change the value property of ' + assetType + ' to newValue', () => {
             const factory = businessNetworkConnection.getBusinessNetwork().getFactory();
-
+            let reg;
             // Create a user participant
-            const user = factory.newResource(namespace, 'User', 'Lenny Lennyson');
+            const user = factory.newResource(namespace, 'Regulator', 'teg0123');
+            user.firstName='Lenny';
+            user.lastName='lennyson';
+            user.email='lenny@qnd';
 
-            // Create the asset
-            const asset = factory.newResource(namespace, assetType, 'ASSET_001');
-            asset.value = 'old-value';
-
-            // Create a transaction to change the asset's value property
-            const changeAssetValue = factory.newTransaction(namespace, 'ChangeAssetValue');
-            changeAssetValue.relatedAsset = factory.newRelationship(namespace, assetType, asset.$identifier);
-            changeAssetValue.newValue = 'new-value';
-
-            let assetRegistry;
-
-            return businessNetworkConnection.getAssetRegistry(namespace + '.' + assetType).then(registry => {
-                assetRegistry = registry;
-                // Add the asset to the appropriate asset registry
-                return registry.add(asset);
-            }).then(() => {
-                return businessNetworkConnection.getParticipantRegistry(namespace + '.User');
-            }).then(userRegistry => {
-                // Add the user to the appropriate participant registry
-                return userRegistry.add(user);
-            }).then(() => {
-                // Submit the transaction
-                return businessNetworkConnection.submitTransaction(changeAssetValue);
-            }).then(registry => {
-                // Get the asset
-                return assetRegistry.get(asset.$identifier);
-            }).then(newAsset => {
-                // Assert that the asset has the new value property
-                newAsset.value.should.equal(changeAssetValue.newValue);
-            });
+            return businessNetworkConnection.getParticipantRegistry(namespace+'.Regulator')
+            .then( (result)=>{
+                reg = result;
+                return reg.add(user);
+            } );
         });
     });
 

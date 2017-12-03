@@ -11,11 +11,14 @@
         "lint": "eslint .",
         "postlint": "npm run licchk",
         "licchk": "license-check",
-        "postlicchk": "npm run doc",
-        "test": "mocha -t 0 --recursive",
+        "postlicchk": "",
+        "test": "mocha -t 0 --recursive network/test",
         "restartFabric": "./scripts/fabric-tools/startFabric.sh",
-        "freshdeploy": "npm run buildbna && composer runtime install --card PeerAdmin@local -n metal-trade-network && composer network start --card PeerAdmin@local -a ./dist/amptn.bna -A admin -S adminpw -f ./_cards/admin@local.card",
-        "update": "npm run buildbna &&  composer network update --card admin@mtn-local -a ./dist/amptn.bna"
+        "prefreshdeploy": "npm run buildbna",
+        "freshdeploy": "composer runtime install --card PeerAdmin@local -n metal-trade-network && composer network start --card PeerAdmin@local -a ./dist/amptn.bna -A admin -S adminpw -f ./_cards/admin@local.card",
+        "postfreshdeploy" : "composer card import --file ./_cards/admin@local.card --name admin@mtn-local",
+        "update": "npm run buildbna &&  composer network update --card admin@mtn-local -a ./dist/amptn.bna",
+        "testdata":"node ./utils/setupTestData.js"
     },
     "repository": {
         "type": "git",

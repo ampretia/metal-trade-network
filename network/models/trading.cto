@@ -25,16 +25,8 @@ asset CommodityListing identified by listingId {
   o Commodity commodity
   o Integer   quantity
   o Double           offerPrice
-  --> Brokage        offeringHouse
-  // --> BarteringSpec  barteringSpec optional
-}
-// asset BarteringSpec identified by id {
-//   o String id
-//   o Integer upperRangePercent
-//   o Integer lowerRangePercent
-//   --> Trader  trader
-// }
-// 
+  --> Brokage        offeringHouse}
+
 
 /**
  * An exhange will have an identity and description. 
@@ -92,7 +84,6 @@ transaction SubmitListing {
   o Integer   quantity
   o Double           offerPrice
   --> Exchange  exchange
-  // o BarteringSpec  bartingSpec optional
   o String        newid
 }
 
@@ -117,13 +108,3 @@ participant AppDev identified by id extends Person {
   o String id
 }
 
-
-//
-// Setup the demonstration assets
-transaction _demoSetup {
-  
-}
-
-asset output identified by text {
-  o String text
-}

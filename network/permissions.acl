@@ -8,118 +8,200 @@
  */
 
 
-/** 
- * Traders need to be able to do operations on commodities - but here are some restrctions
- * that are enforced by the Wholesaler and TradersAssets rules.
- * The CommoditiesView rule is the 'backstop' that permits general access to the 
- */
-// rule Wholesaler {
-//   description: "Allow Trader to see the commodities that are owned by the Wholesaler"
-//   participant: "ampretia.mtn.Trader"
-//   operation: READ,UPDATE
-//   resource(v): "ampretia.mtn.Commodity"
-//   condition: (v.owner.getIdentifier() == 'WHOLESALER' )
-//   action: ALLOW
-// }
+// Traders can see their trades and listed commodities, and the commodities held on their systesm
 
-// rule TradersAssets {
-//   description: "Deby traders permissions on commodities that they do not own"
-//   participant(t): "ampretia.mtn.Trader"
-//   operation: ALL
-//   resource(v): "ampretia.mtn.Commodity"
-//   condition: (v.owner.getIdentifier() != t.getIdentifier()  )
-//   action: DENY
-// }
-
-// rule CommoditiesView {
-//   description: "Make the commodities themselves generally visible"
-//   participant: "ampretia.mtn.Trader"
-//   operation: ALL
-//   resource: "ampretia.mtn.Commodity"
-//   action: ALLOW
-// }
-
-// /**
-//  * Permit the Traders to submit trades
-//  */
-// rule MakeTrades_1 {
-//   description: "Allow traders to submit trades"
-//   participant: "ampretia.mtn.Trader"
-//   operation: ALL
-//   resource: "ampretia.mtn.Trade"
-//   action: ALLOW
-// }
-
-
-// /**
-//  * Participant access; the traders need to be able to view their own traders, but 
-//  * other traders. Regulators need to have a wider view
-//  */
-// rule TraderSeeThemselves {
-//   description: "Trader can see their own participant"
-//   participant(t): "ampretia.mtn.Trader"
-//   operation: ALL
-//   resource(v): "ampretia.mtn.Trader"
-//   condition: (v.getIdentifier() == t.getIdentifier())
-//   action: ALLOW
-// }
-
-// rule Regulator {
-//   description: "Regulator can see all the trading assets etc. "
-//   participant: "ampretia.mtn.Regulator"
-//   operation: ALL
-//   resource: "ampretia.mtn.**"
-//   action: ALLOW
-// }
-
-// rule TradersSeeOwnTransactions {
-//   description: "Traders should be able to see the history of the own transactions"
-//   participant(t): "ampretia.mtn.Trader"
-//   operation: READ
-//   resource(v): "org.hyperledger.composer.system.HistorianRecord"
-//   condition: (v.participantInvoking.getIdentifier() == t.getIdentifier())
-//   action: ALLOW
-// }
-
-// /**
-//  * HistorianRecords should only be generally visiable to regulator. A trader though can 
-//  * see their own trades in the Historian
-//  */
-// rule DenyHistorian {
-//   description: "Traders can't see the record of what has happened in the business network"
-//   participant: "ampretia.mtn.Trader"
-//   operation: READ,UPDATE,DELETE
-//   resource: "org.hyperledger.composer.system.HistorianRecord"
-//   action: DENY
-// }
-
-/**
- * All participants in this network need to have general information to see the details of the deployed
- * business Network
- */
-rule NetworkUpdate {
-  description:  "System ACL to permit all access"
+rule Trader_00 {
+  description: "Essential read access to network"
   participant: "ampretia.mtn.Trader"
   operation: READ
-  resource: "org.hyperledger.composer.system.Network"
+  resource: "org.hyperledger.composer.system.Network#metal-trade-network@0.0.1"
+  action: ALLOW
+}
+
+rule Trader_10{
+  description: "Details of traders readable by those in same employer"
+  participant(p): "ampretia.mtn.Trader"
+  operation: ALL
+  resource(v): "ampretia.mtn.Trader"
+  condition:  ( p.employer.getIdentifier() !== v.employer.getIdentifier()   )
+  action: DENY
+}
+
+rule Trader_11 {
+  description: "Only see holdings by same employer"
+  participant(p): "ampretia.mtn.Trader"
+  operation: ALL
+  resource(v): "ampretia.mtn.CommodityHolding"
+  condition: (  v.tradedBy.employer.getIdentifier() !== p.employer.getIdentifier() )
+  action: DENY
+}
+
+rule Trader_trade_00 {
+  description: "Create commodities listings"
+  participant: "ampretia.mtn.Trader"
+  operation: CREATE
+  resource: "ampretia.mtn.CommodityHolding"
+  transaction: "ampretia.mtn.Trade"
+  action: ALLOW
+}
+rule Trader_trade_00b {
+  description: "Create commodities listings"
+  participant: "ampretia.mtn.Trader"
+  operation: READ
+  resource: "ampretia.mtn.CommodityHolding"
+  action: ALLOW
+}
+rule Trader_trade_00c {
+  description: "Create commodities listings"
+  participant: "ampretia.mtn.Trader"
+  operation: UPDATE
+  resource: "ampretia.mtn.CommodityListing"
+  transaction: "ampretia.mtn.Trade"
+  action: ALLOW
+}
+rule Trader_trade_00d {
+  description: "Create commodities listings"
+  participant: "ampretia.mtn.Trader"
+  operation: UPDATE
+  resource: "ampretia.mtn.Brokage"
+  transaction: "ampretia.mtn.Trade"
+  action: ALLOW
+} 
+rule Trader_trade_00e {
+  description: "Create commodities listings"
+  participant: "ampretia.mtn.Trader"
+  operation: UPDATE
+  resource: "ampretia.mtn.Exchange"
+  transaction: "ampretia.mtn.Trade"
+  action: ALLOW
+} 
+rule Trader_trade_00f {
+  description: "Create commodities listings"
+  participant: "ampretia.mtn.Trader"
+  operation: UPDATE
+  resource: "ampretia.mtn.Trader"
+  transaction: "ampretia.mtn.Trade"
+  action: ALLOW
+} 
+rule Trader_trade_00g {
+  description: "Create commodities listings"
+  participant: "ampretia.mtn.Trader"
+  operation: CREATE
+  resource: "ampretia.mtn.Trade"
+  action: ALLOW
+}  
+
+
+rule Trader_listing_00 {
+  description: "Create commodities listings"
+  participant: "ampretia.mtn.Trader"
+  operation: CREATE
+  resource: "ampretia.mtn.CommodityListing"
+  transaction: "ampretia.mtn.SubmitListing"
+  action: ALLOW
+}
+rule Trader_listing_00b {
+  description: "Create commodities listings"
+  participant: "ampretia.mtn.Trader"
+  operation: READ
+  resource: "ampretia.mtn.CommodityListing"
   action: ALLOW
 }
 
 
-rule NetworkAdminUser {
-    description: "Grant business network administrators full access to user resources"
-    participant: "org.hyperledger.composer.system.NetworkAdmin"
-    operation: ALL
-    resource: "ampretia.**"
-    action: ALLOW
+rule Trader_listing_002 {
+  description: "update exchange as part of tx"
+  participant: "ampretia.mtn.Trader"
+  operation: CREATE
+  resource: "ampretia.mtn.SubmitListing"
+  action: ALLOW
 }
 
-rule NetworkAdminSystem {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.hyperledger.composer.system.NetworkAdmin"
-    operation: ALL
-    resource: "org.hyperledger.composer.system.**"
-    action: ALLOW
+rule Trader_listing_001 {
+  description: "update exchange as part of tx"
+  participant: "ampretia.mtn.Trader"
+  operation: UPDATE
+  resource: "ampretia.mtn.Exchange"
+  transaction: "ampretia.mtn.SubmitListing"
+  action: ALLOW
+}
+
+/*rule TransactionalRuleName {
+  description: "Description of the Transactional ACL rule"
+  participant: "ANY"
+  operation: ALL
+  resource(res): "org.acme.SampleAsset"
+  transaction(tx): "org.acme.SampleTxn"
+  condition: (tx.asset.type() === res.asset.type())
+  action: ALLOW
+}*/
+
+rule Trader_01 {
+  description: "Essential read access to registries"
+  participant: "ampretia.mtn.Trader"
+  operation: READ
+  resource: "ampretia.mtn.Trader"
+  action: ALLOW
+}
+
+rule Trader_02 {
+  description: "Essential read access to registries"
+  participant: "ampretia.mtn.Trader"
+  operation: READ
+  resource: "ampretia.mtn.Exchange"
+  action: ALLOW
+}
+
+rule Trader_03 {
+  description: "Essential read access to registries"
+  participant: "ampretia.mtn.Trader"
+  operation: READ
+  resource: "ampretia.mtn.Brokage"
+  action: ALLOW
+}
+
+
+
+
+
+rule Basic_00_trader {
+  description: "basic access to master registry"
+  participant: "ampretia.mtn.Trader"
+  operation: READ
+  resource: "org.hyperledger.composer.system.AssetRegistry#ampretia.mtn.CommodityHolding"
+  action: ALLOW
+}
+
+rule Basic_01_trader {
+  description: "basic access to master registry"
+  participant: "ampretia.mtn.Trader"
+  operation: READ
+  resource: "org.hyperledger.composer.system.AssetRegistry#ampretia.mtn.CommodityListing"
+  action: ALLOW
+}
+
+rule Basic_01 {
+  description: "basic access to master registry"
+  participant: "ampretia.mtn.Person"
+  operation: READ
+  resource: "org.hyperledger.composer.system.ParticipantRegistry"
+  action: ALLOW
+}
+
+rule Basic_02 {
+  description: "basic access to master registry"
+  participant: "ampretia.mtn.Person"
+  operation: READ
+  resource: "org.hyperledger.composer.system.TransactionRegistry"
+  action: ALLOW
+}
+
+rule Basic_03 {
+  description: "basic access to master registry"
+  participant: "ampretia.mtn.Person"
+  operation: CREATE
+  resource: "org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW
 }
 
 //
@@ -127,17 +209,18 @@ rule NetworkAdminSystem {
 //
 rule SystemACL {
  description:  "System ACL to permit all access"
- participant: "org.hyperledger.composer.system.Participant"
+ participant: "org.hyperledger.composer.system.NetworkAdmin"
  operation: ALL
- resource: "ampretia.**"
+ resource: "ampretia.mtn.**"
  action: ALLOW
 } 
 
 //
 rule SystemACL_2 {
  description:  "System ACL to permit all access"
- participant: "org.hyperledger.composer.system.Participant"
+ participant: "org.hyperledger.composer.system.NetworkAdmin"
  operation: ALL
  resource: "org.hyperledger.composer.system.**"
  action: ALLOW
 } 
+

@@ -107,6 +107,15 @@
             "email": "waylon@qnh.com",
             "firstName": "Waylon",
             "lastName": "Schultz"
+        },
+        {
+            "$class": "ampretia.mtn.Trader",
+            "tradeId": "6836",
+            "fundLimit": 10000,
+            "employer": "resource:ampretia.mtn.Brokage#9156",
+            "email": "liam@nas.com",
+            "firstName": "Liam",
+            "lastName": "Foley"
         }
     ],
     "transactions" :

@@ -1,15 +1,13 @@
 #!/bin/bash
 set -ev
 
-composer transaction submit --card susie_trader@local -d '{
-            "$class": "ampretia.mtn.SubmitListing",
-            "commodity": {
-              "$class": "ampretia.mtn.Commodity",
-              "tradingSymbol": "Fe",
-              "description": "Lead"
-            },
-            "quantity": 100000,
-            "offerPrice": 20,
-            "exchange": "resource:ampretia.mtn.Exchange#2751",
-            "newid": "fe01"
-          }'
+composer participant add --card admin@mtn-local --data '{
+  "$class": "ampretia.mtn.AppDev",
+  "id": "8522",
+  "email": "nick@ampretia.co.uk",
+  "firstName": "Nick",
+  "lastName": "Lincoln"
+}
+'
+
+composer identity issue --card admin@mtn-local -u nick -a ampretia.mtn.AppDev#8522 --file nick@mtn-local.card

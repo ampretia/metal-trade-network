@@ -1,0 +1,16 @@
+/**
+ * Extended trading model.
+ */
+
+namespace ampretia.mtn.extended
+
+import ampretia.mtn.*
+
+asset BarteringSpec identified by id {
+  o String id
+  o Integer upperRangePercent
+  o Integer lowerRangePercent
+  --> Trader  trader
+}
+
+ 

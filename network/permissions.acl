@@ -126,16 +126,6 @@ rule Trader_listing_001 {
   action: ALLOW
 }
 
-/*rule TransactionalRuleName {
-  description: "Description of the Transactional ACL rule"
-  participant: "ANY"
-  operation: ALL
-  resource(res): "org.acme.SampleAsset"
-  transaction(tx): "org.acme.SampleTxn"
-  condition: (tx.asset.type() === res.asset.type())
-  action: ALLOW
-}*/
-
 rule Trader_01 {
   description: "Essential read access to registries"
   participant: "ampretia.mtn.Trader"
@@ -224,3 +214,17 @@ rule SystemACL_2 {
  action: ALLOW
 } 
 
+rule AppDev_001 {
+ description:  "System ACL to permit all access"
+ participant: "ampretia.mtn.AppDev"
+ operation: READ
+ resource: "org.hyperledger.composer.system.**"
+ action: ALLOW
+}
+rule AppDev_002 {
+ description:  "System ACL to permit all access"
+ participant: "ampretia.mtn.AppDev"
+ operation: READ
+ resource: "ampretia.mtn.**"
+ action: ALLOW
+}

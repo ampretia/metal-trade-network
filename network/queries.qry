@@ -1,4 +1,10 @@
 
+query selectListingsByExchange {
+    description: "Select all commodities listings from one brokage"
+  statement:
+      SELECT ampretia.mtn.CommodityListing
+          WHERE (quantity > _$qty)
+}
 // query selectCommodities {
 //   description: "Select all commodities"
 //   statement:

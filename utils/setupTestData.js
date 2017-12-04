@@ -25,7 +25,7 @@ let businessNetworkDefinition;
 
 let serializer;
 
-let userCardName = 'admin@mtn-local';
+let userCardName = 'admin@mtn-ibmcloud';
 // rather than use console.log use more like a debug fn call
 const LOG = {
     info: (string) => {

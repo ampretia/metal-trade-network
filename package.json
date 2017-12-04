@@ -18,6 +18,8 @@
         "freshdeploy": "composer runtime install --card PeerAdmin@local -n metal-trade-network && composer network start --card PeerAdmin@local -a ./dist/amptn.bna -A admin -S adminpw -f ./_cards/admin@local.card",
         "postfreshdeploy" : "composer card import --file ./_cards/admin@local.card --name admin@mtn-local",
         "update": "npm run buildbna &&  composer network update --card admin@mtn-local -a ./dist/amptn.bna",
+        "update:cloud": "npm run buildbna && composer network update --card admin@mtn-ibmcloud -a ./dist/amptn.bna",
+        
         "testdata":"node ./utils/setupTestData.js"
     },
     "repository": {

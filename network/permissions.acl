@@ -169,6 +169,43 @@ rule Basic_01_trader {
   resource: "org.hyperledger.composer.system.AssetRegistry#ampretia.mtn.CommodityListing"
   action: ALLOW
 }
+rule Basic_02_trader {
+  description: "basic access to master registry"
+  participant: "ampretia.mtn.Trader"
+  operation: READ
+  resource: "org.hyperledger.composer.system.AssetRegistry#org.hyperledger.composer.system.HistorianRecord"
+  action: ALLOW
+}
+rule Basic_03_trader {
+  description: "basic access to master registry"
+  participant: "ampretia.mtn.Trader"
+  operation: READ
+  resource: "org.hyperledger.composer.system.AssetRegistry#org.hyperledger.composer.system.Identity"
+  action: ALLOW
+}
+rule Basic_04_trader {
+  description: "basic access to master registry"
+  participant: "ampretia.mtn.Trader"
+  operation: READ
+  resource: "org.hyperledger.composer.system.AssetRegistry#ampretia.mtn.Brokage"
+  action: ALLOW
+}
+
+rule Basic_05_trader {
+  description: "basic access to master registry"
+  participant: "ampretia.mtn.Trader"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.AssetRegistry#ampretia.mtn.AppDev"
+  action: DENY
+}
+
+rule Basic_06_trader {
+  description: "basic access to master registry"
+  participant: "ampretia.mtn.Trader"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.AssetRegistry#ampretia.mtn.InHouseNetworkAdmin"
+  action: DENY
+}
 
 rule Basic_01 {
   description: "basic access to master registry"

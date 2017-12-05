@@ -44,6 +44,7 @@ rule Trader_trade_00 {
   transaction: "ampretia.mtn.Trade"
   action: ALLOW
 }
+
 rule Trader_trade_00b {
   description: "Create commodities listings"
   participant: "ampretia.mtn.Trader"
@@ -51,6 +52,7 @@ rule Trader_trade_00b {
   resource: "ampretia.mtn.CommodityHolding"
   action: ALLOW
 }
+
 rule Trader_trade_00c {
   description: "Create commodities listings"
   participant: "ampretia.mtn.Trader"
@@ -59,6 +61,7 @@ rule Trader_trade_00c {
   transaction: "ampretia.mtn.Trade"
   action: ALLOW
 }
+
 rule Trader_trade_00d {
   description: "Create commodities listings"
   participant: "ampretia.mtn.Trader"
@@ -67,6 +70,7 @@ rule Trader_trade_00d {
   transaction: "ampretia.mtn.Trade"
   action: ALLOW
 } 
+
 rule Trader_trade_00e {
   description: "Create commodities listings"
   participant: "ampretia.mtn.Trader"
@@ -75,6 +79,7 @@ rule Trader_trade_00e {
   transaction: "ampretia.mtn.Trade"
   action: ALLOW
 } 
+
 rule Trader_trade_00f {
   description: "Create commodities listings"
   participant: "ampretia.mtn.Trader"
@@ -83,6 +88,7 @@ rule Trader_trade_00f {
   transaction: "ampretia.mtn.Trade"
   action: ALLOW
 } 
+
 rule Trader_trade_00g {
   description: "Create commodities listings"
   participant: "ampretia.mtn.Trader"
@@ -90,7 +96,6 @@ rule Trader_trade_00g {
   resource: "ampretia.mtn.Trade"
   action: ALLOW
 }  
-
 
 rule Trader_listing_00 {
   description: "Create commodities listings"
@@ -100,6 +105,7 @@ rule Trader_listing_00 {
   transaction: "ampretia.mtn.SubmitListing"
   action: ALLOW
 }
+
 rule Trader_listing_00b {
   description: "Create commodities listings"
   participant: "ampretia.mtn.Trader"
@@ -107,7 +113,6 @@ rule Trader_listing_00b {
   resource: "ampretia.mtn.CommodityListing"
   action: ALLOW
 }
-
 
 rule Trader_listing_002 {
   description: "update exchange as part of tx"
@@ -205,6 +210,14 @@ rule Basic_06_trader {
   operation: ALL
   resource: "org.hyperledger.composer.system.AssetRegistry#ampretia.mtn.InHouseNetworkAdmin"
   action: DENY
+}
+
+rule Basic_07_trader {
+  description: "basic access to master registry"
+  participant: "ampretia.mtn.Trader"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.AssetRegistry#ampretia.mtn.Exchange"
+  action: ALLOW
 }
 
 rule Basic_01 {

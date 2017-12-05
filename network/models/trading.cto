@@ -93,7 +93,6 @@ event TradeNotification {
    o Double  unitPricePaid
 }
 
-
 /**
  * role purely for inhouse to be able to create identities
  */

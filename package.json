@@ -20,7 +20,8 @@
         "update": "npm run buildbna &&  composer network update --card admin@mtn-local -a ./dist/amptn.bna",
         "update:cloud": "npm run buildbna && composer network update --card admin@mtn-ibmcloud -a ./dist/amptn.bna",
         
-        "testdata":"node ./utils/setupTestData.js"
+        "setupTestData":"node ./utils/setupTestData.js",
+        "submitTestTxs":"./utils/submit.sh"
     },
     "repository": {
         "type": "git",

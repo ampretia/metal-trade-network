@@ -120,41 +120,21 @@
     ],
     "transactions" :
         [{
-            "$class": "ampretia.mtn.SubmitListing",
-            "commodity": {
-              "$class": "ampretia.mtn.Commodity",
-              "tradingSymbol": "Ag",
-              "description": "Gold"
-            },
-            "quantity": 1220,
-            "offerPrice": 54,
-            "exchange": "resource:ampretia.mtn.Exchange#2751",
-            "newid": "ag01"
-          },
-          {
-            "$class": "ampretia.mtn.SubmitListing",
-            "commodity": {
-              "$class": "ampretia.mtn.Commodity",
-              "tradingSymbol": "Fe",
-              "description": "Lead"
-            },
-            "quantity": 100000,
-            "offerPrice": 20,
-            "exchange": "resource:ampretia.mtn.Exchange#2751",
-            "newid": "fe01"
-          },
-          {
-            "$class": "ampretia.mtn.Trade",
-            "line": {
-              "$class": "ampretia.mtn.TradeLine",
-              "tradingSymbol": "Ag",
-              "quantity": 100
-            },
-            "trader": "resource:ampretia.mtn.Trader#6515",
-            "exchange": "resource:ampretia.mtn.Exchange#2751"
-          }
-        
-        ]
+            "card" : "",
+            "instances": [{
+                "$class": "ampretia.mtn.SubmitListing",
+                "commodity": {
+                  "$class": "ampretia.mtn.Commodity",
+                  "tradingSymbol": "Ag",
+                  "description": "Gold"
+                },
+                "quantity": 1220,
+                "offerPrice": 54,
+                "exchange": "resource:ampretia.mtn.Exchange#2751",
+                "newid": "ag01"
+              }
 
+            ] 
+        }]
     
 }

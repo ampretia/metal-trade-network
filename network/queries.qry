@@ -5,29 +5,3 @@ query selectListingsByExchange {
       SELECT ampretia.mtn.CommodityListing
           WHERE (quantity > _$qty)
 }
-// query selectCommodities {
-//   description: "Select all commodities"
-//   statement:
-//       SELECT ampretia.mtn.Commodity
-// }
-
-// query selectCommoditiesByExchange {
-//   description: "Select all commodities based on their main exchange"
-//   statement:
-//       SELECT ampretia.mtn.Commodity
-//           WHERE (mainExchange==_$exchange)
-// }
-
-// query selectCommoditiesByOwner {
-//   description: "Select all commodities based on their owner"
-//   statement:
-//       SELECT ampretia.mtn.Commodity
-//           WHERE (owner == _$owner)
-// }
-
-// query selectCommoditiesWithHighQuantity {
-//   description: "Select commodities based on quantity"
-//   statement:
-//       SELECT ampretia.mtn.Commodity
-//           WHERE (quantity > 60)
-// }

@@ -6,12 +6,7 @@
     "version": "0.1.7",
     "scripts": {
         "postinstall": "./scripts/getTools.sh",
-        "buildbna": "mkdirp ./dist && composer archive create  --sourceType dir --sourceName ./network/ -a ./dist/amptn.bna",
-        "pretest": "npm run lint",
-        "lint": "eslint .",
-        "postlint": "npm run licchk",
-        "licchk": "license-check",
-        "postlicchk": "",
+ 
         "test": "mocha -t 0 --recursive network/test",
         "restartFabric": "./scripts/fabric-tools/startFabric.sh",
         "prefreshdeploy": "npm run buildbna",
@@ -21,7 +16,20 @@
         "update:cloud": "npm run buildbna && composer network update --card admin@mtn-ibmcloud -a ./dist/amptn.bna",
         
         "setupTestData":"node ./utils/setupTestData.js",
-        "submitTestTxs":"./utils/submit.sh"
+        "submitTestTxs":"./utils/submit.sh",
+        "deploy": "./scripts/deploy.sh",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "createBNA": "composer archive create -a ./_dist/commodity-network.bna --sourceType dir --sourceName ./network",
+    "cycle": "./fabric-tools/teardownFabric.sh  && ./fabric-tools/startFabric.sh && ./fabric-tools/createPeerAdminCard.sh",
+    "createRegulator": "composer participant add   -p hlfv1 -n demo-network -i admin -s adminpw --data ' {\"regId\" : \"mbw\", \"firstName\":\"matthew\", \"lastname\":\"white\", \"office\":\"hursley\" }'    ",
+    "deploy-network": "npm run createBNA && composer network deploy -p hlfv1 -i PeerAdmin -s elephant -a ./_dist/commodity-network.bna -A admin -S",
+    "update-network": "npm run createBNA && composer network update -p hlfv1 -i admin -s elephant -a ./_dist/commodity-network.bna",
+    "setup": "composer transaction submit -p hlfv1 -n demo-network -i admin -s adminpw -d '{\"$class\": \"org.acme.trading._demoSetup\"}' ",
+    "trade": "composer transaction submit -p hlfv1 -n demo-network -i TRACYID -s adminpw -d '{\"$class\": \"org.acme.trading.Trade\",  \"commodity\": \"resource:org.acme.trading.Commodity#Ag\",  \"newOwner\": \"resource:org.acme.trading.Trader#TRACY\" }' ",
+    "list:admin": "composer network list -p hlfv1 -n demo-network -i admin -s adminpw",
+    "list:tracy": "composer network list -p hlfv1 -n demo-network -i TRACYID ",
+    "list:tom": "composer network list -p hlfv1 -n demo-network -i TOMID ",
+    "ids": "./activateIdentity.sh TRACY && ./activateIdentity.sh TOM"
     },
     "repository": {
         "type": "git",
